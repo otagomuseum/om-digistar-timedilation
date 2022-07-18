@@ -1,0 +1,100 @@
+﻿# {[7.21.05.1]}
+# {[7.21.05]}
+# Digistar Script 
+# Created: 11/10/2021
+
+
+	script play .\TimeDilationConsole_setup.ds
+	shipTime is textClass
+	scene date rate 1 seconds
+
++0.1
+	midConsole add shipTime
+	shipTime intensity 100
+	shipTime position spherical 0 0 0 m 
+	shipTime textScale 1 1
+	shipTime position 0 0 0
+	shipTime alignment "center"
+	shipTime vOrigin "center"
+	shipTime origin "center"
+	shipTime font "Bahnschrift SemiCondensed"
+	shipTime color white
+	shipTime outline off
+	
+	localLabel is localTime
+	midConsole add localLabel
+	localLabel outlineColor 0 0 0
+	localLabel text "Spaceship Time"
+	localLabel textScale 0.8
+	localLabel color 0 65.49 80	
+	localLabel outline on
+	localLabel outlineColor white
+	localLabel outlineWidth 2
+	localLabel intensity 100
+	localLabel offset 0 1.45 0
+	localLabel alignment "center"
+	localLabel origin "center"
+	localLabel font "Bahnschrift SemiCondensed"
+	
+	
+	earthTime is text2Class
+	earthTime text "Earth Time Since Launch"
+	leftConsole add earthTime
+	earthTime intensity 100
+	earthTime position spherical 0 0 0 m 
+	earthTime scale 1.5 2.5 2.5
+	earthTime position 0 0 0
+	earthTime alignment "center"
+	earthTime origin "center"
+	earthTime vOrigin "center"
+	earthTime font "Bahnschrift SemiCondensed"
+	
+	
+	
+	earthTimeLabel is text2Class
+	earthTimeLabel text "Time Passed on Earth"
+	leftConsole add earthTimeLabel
+	earthTimeLabel intensity 100
+	earthTimeLabel position spherical 0 0 0 m 
+	earthTimeLabel scale 1 2.5 2.5
+	earthTimeLabel position 0 0 3.6
+	earthTimeLabel alignment "center"
+	earthTimeLabel origin "center"
+	earthTimeLabel color 0 65.49 80	
+	earthTimeLabel font "Bahnschrift SemiCondensed"
+	earthTimeLabel outline on
+	earthTimeLabel outlineWidth 2
+	earthTimeLabel outlineColor white
+	
+	
+	timeRate is text2Class
+	rightConsole add timeRate
+	timeRate intensity 100
+	timeRate position spherical 0 0 0 m 
+	timeRate scale 1.5 2.5 2.5
+	timeRate position 0 0 0
+	timeRate alignment "center"
+	timeRate origin "center"
+	timeRate vOrigin "center"
+	timeRate font "Bahnschrift SemiCondensed"
+	timeRate text "realtime"
+	
+	timeRateLabel is text2Class
+	rightConsole add timeRateLabel
+	timeRateLabel intensity 100
+	timeRateLabel position spherical 0 0 0 m 
+	timeRateLabel scale 1 2.5 2.5
+	timeRateLabel position 0 0 3.6
+	timeRateLabel alignment "center"
+	timeRateLabel origin "center"
+	timeRateLabel color 0 65.49 80	
+	timeRateLabel font "Bahnschrift SemiCondensed"
+	timeRateLabel outline on
+	timeRateLabel outlineWidth 2
+	timeRateLabel text "Time Difference"
+	timeRateLabel outlineColor white
+	
+	#scene date rate 1 seconds
+	js stop "timedilation"
+	js play .\timedilation.js
+	

@@ -1,0 +1,47 @@
+﻿# {[7.22.02.1]}
+# {[7.21.05.1]}
+# Digistar Script 
+# Created: 12/7/2021
+
+0:00	leftConsole is solidModelClass
+	midConsole is solidModelClass
+	rightConsole is solidModelClass
+	
+	ConsoleImage is imageClass
+	
+	ConsoleImage path $Content\User\Shows\Spacetronauts\Variant_JustInTime\Images\extra-interface_01.png
+	
+	
+	leftConsole model $Content\Library\Models\Misc\image.x
+	leftConsole modelTexture  0 ConsoleImage
+	leftConsole scale 0.9 1 0.4
+	leftConsole intensity 100 
+	leftConsole position spherical -35 0 20 m
+	
+	#leftConsole turnTo position cartesian 0 0 0  axis +Y 
+	leftConsole attitude cartesian 145 -15.8 6.8
+	
+	midConsole model $Content\Library\Models\Misc\image.x
+	midConsole modelTexture  0 ConsoleImage
+	midConsole scale 0.9 1 0.4
+	midConsole intensity 100 
+	midConsole position spherical 0 2.8 20 m
+	
+	midConsole turnTo position cartesian 0 0 0  axis +Y 
+	
+	rightConsole model $Content\Library\Models\Misc\image.x
+	rightConsole modelTexture  0 ConsoleImage
+	rightConsole scale 0.9 1 0.4
+	rightConsole intensity 100 
+	rightConsole position spherical 35 0 20 m
+	
+	rightConsole attitude cartesian -145 -15.8 -6.8
+	#rightConsole turnTo position cartesian 0 0 0  axis +Y 
+	
+	scenenear add leftConsole
+	scenenear add midConsole
+	scenenear add rightConsole
+	
++0.1	leftConsole position spherical -35 13.7 20 m duration 2 0.5 0.5
+	midConsole position spherical 0 15.8 20 m duration 2 0.5 0.5
+	rightConsole position spherical 35 13.7 20 m duration 2 0.5 0.5
