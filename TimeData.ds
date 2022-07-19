@@ -15,9 +15,16 @@ TimeData attribute overrideTimeRate string
 TimeData attribute tShip double
 TimeData attribute tEarth double
 TimeData attribute tEarthOffset double
+TimeData attribute rVelocity double
+TimeData attribute rGravity double
 
 TimeData attribute earthPaused bool
 TimeData attribute shipPaused bool
+
+TimeData attribute earthTimeLabel name
+TimeData attribute shipTimeLabel name
+TimeData attribute timeRateLabel name
+TimeData attribute cPercentLabel name 
 
 TimeData lock
 

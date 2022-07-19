@@ -7,37 +7,37 @@ let nav = new DsObject('navigation');
 let scene = new DsObject('scene');
 let system = new DsObject('system');
 let timeData = new DsObject('timeDilationData', 'TimeData');
-
-let earthTime = new DsObject('earthTime');
-let timeRate = new DsObject('timeRate');
-let timeElapsed = 0;
-let shipTime = new DsObject('shipTime');
 let eye = new DsObject('eye');
-let overrideTimeRate = new DsObject('overrideTimeRate');
 let lastTime = scene.date * 86400; // system.time;
 let currentTime;
 let lastPosition = eye.position;
 let currentPosition;
-const c = 299792458; // speed of light, m/s
+const c = 299792458; // speed of light, (m/s)
 const GoverCSquared = 7.4214e-28; // m/kg
-
-let updateEarth = true;
-let updateShip = true;
-let pause = false;
+const mSun = 1.9891e+30; // mass of Sun (kg)
 
 // L = Distance traveled (as seen from Earth), tSelf = time taken (on ship)
 // Returns: v - velocity on ship, and tEarth - time elapsed on Earth
 let vSelf = function(L, tSelf) {
+	if (L == 0) {
+		return {v:0,tEarth: tSelf,tRate:1};
+	}
+
 	let v = c/Math.sqrt(1+(c*tSelf)**2/L**2);
-	return {v:v, tEarth: L/v};
+	let tEarth = L/v;
+	let tRate = tEarth/tSelf;
+	return {v:v, tEarth: tEarth, tRate: tRate};
 }
 
 // M= Mass of object (kg), R= radius of orbit (m)
 // Sanity check: M87= 1.31e+40kg at 2.599e+13m = ~~0.5s (ship) per 1s (earth)
 // Returns: time elapsed on Earth
-let tGrav = function(M, R, tSelf) {
+let tGrav = function(M, R) {
+	if (M == 0 || R == 0) {
+		return 1;
+	}
 	let t = Math.sqrt(1 - ((2*GoverCSquared) * (M/R)));
-	return tSelf/t;
+	return 1/t;
 }
 
 let dist = function(posA, posB) {
@@ -112,40 +112,10 @@ let formatcPercent = function(percent) {
 	}
 }
 
-let tEarthTotal = 0;
+timeData.tShip = 0;
+timeData.tEarth = 0;
 
 while (true) {
-	let msg = Ds.GetMessage();
-	if (msg == "disableEarth") {
-		updateEarth = false;
-	}
-	if (msg == "enableEarth") {
-		updateEarth = true;
-	}
-	if (msg == "disableShip") {
-		updateShip = false;
-	}
-	if (msg == "enableShip") {
-		updateShip = true;
-	}
-	if (msg == "pause") {
-		pause = true;
-	}
-	if (msg == "unpause") {
-		pause = false;
-	}
-	if (msg == "resetTime") {
-		timeElapsed = 0;
-		tEarthTotal = 0;
-		addTime.position = {x:0,y:0,z:0};
-	}
-	if (msg == "syncTime") {
-		tEarthTotal = timeElapsed;
-	} 
-	if (msg == "status") {
-		print(tEarthTotal);
-	}
-
 	currentPosition = eye.position;
 	currentTime = scene.date * 86400;
 	
@@ -156,47 +126,69 @@ while (true) {
 	
 	lastTime = currentTime;
 	
-	if (deltaT == 0 || pause) {
+	if (deltaT == 0) {
 		timeData.timeRate = "Time stopped";
 		continue; // no divide by zero pls
 	}
 	
-	timeData.tShip =  timeData.tShip + deltaT;
-	timeElapsed = timeElapsed + deltaT;
-
 	let v = vSelf(distance, deltaT);
-	let g = tGrav(8.26e+36, 5.65863e+07, deltaT);
-	
-	timeData.tEarthOffset = g;
+	let M = 0;
+	let R = 0;
+	timeData.rVelocity = v.tRate;
 
-	if (!isNaN(v.tEarth)) {
-		timeData.tEarth = timeData.tEarth + v.tEarth + g;
-		tEarthTotal = tEarthTotal + v.tEarth + g;
-	} else {
-		timeData.tEarth = timeData.tEarth + deltaT + g;
-		tEarthTotal = tEarthTotal + deltaT + g;
+	if (nav.destObject.name) {
+		let object = DsObject.get(nav.destObject.name);
+		if (object.class == 'blackHoleClass') {
+			R = ToMeters(object.radius);
+			M = object.mass * mSun;
+		}
 	}
 	
-	if (updateEarth) {
+	// Sanity check: M87= 1.31e+40kg at 2.599e+13m = ~~2s earth per 1s ship
+	let gRate = tGrav(M, R);
+	
+	timeData.rGravity = gRate;
+
+	if (isNaN(gRate)) {
+		timeData.timeRate = "Inside black hole!";
+		Ds.Wait(1);
+		continue;
+	}
+	
+	const totalRate = v.tRate * gRate;
+	
+	if (!timeData.earthPaused) {
+		timeData.tEarth = timeData.tEarth + (deltaT * totalRate);
 		timeData.cPercent = formatcPercent((v.v/c) * 100);
-		timeData.timeRate = formatTimeRate(v.tEarth / deltaT);
 
 		if (timeData.overrideTimeRate == "") {
-			
-			timeRate.text = formatTimeRate(v.tEarth / deltaT);
+			timeData.timeRate = formatTimeRate(totalRate);
 		} else {
 			timeRate.text = overrideTimeRate.text;
 		}
-		timeData.earthTime = formatTime(tEarthTotal);
-		earthTime.text = formatTime(tEarthTotal); // + addTime.position.x
 		
+		timeData.earthTime = formatTime(timeData.tEarth); // + addTime.position.x
 	}
 	
-	if (updateShip) {
-		timeData.shipTime = formatTime(timeElapsed);
-		shipTime.text = formatTime(timeElapsed);
+	if (!timeData.shipPaused) {
+		timeData.tShip =  timeData.tShip + deltaT;
+		timeData.shipTime = formatTime(timeData.tShip);
 	}
 	
+	if (timeData.earthTimeLabel.name) {
+		DsObject.get(timeData.earthTimeLabel.name).text = timeData.earthTime;
+	}
+	if (timeData.shipTimeLabel.name) {
+		DsObject.get(timeData.shipTimeLabel.name).text = timeData.shipTime;
+	}
+	if (timeData.earthTimeLabel.name) {
+		DsObject.get(timeData.earthTimeLabel.name).text = timeData.timeRate;
+	}
+	if (timeData.cPercentLabel.name) {
+		DsObject.get(timeData.cPercentLabel.name).text = timeData.cPercent;
+	}
 	
 	Ds.Wait(0.1);
+	
+	//break;
 }
