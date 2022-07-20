@@ -1,10 +1,15 @@
-﻿# {[7.21.05.1]}
+﻿# {[7.22.02.1]}
+# {[7.21.05.1]}
 # {[7.21.05]}
 # Digistar Script 
 # Created: 11/10/2021
 
 
 	script play .\TimeDilationConsole_setup.ds
+	script play .\TimeData.ds
+	
+
+	
 	shipTime is textClass
 	scene date rate 1 seconds
 
@@ -94,7 +99,14 @@
 	timeRateLabel text "Time Difference"
 	timeRateLabel outlineColor white
 	
+	timeDilationData is TimeData
+	timeDilationData earthTimeText earthTime
+	timeDilationData timeRateText timeRate
+	timeDilationData shipTimeText shipTime
+	
 	#scene date rate 1 seconds
 	js stop "timedilation"
 	js play .\timedilation.js
+	
+
 	

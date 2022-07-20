@@ -6,7 +6,7 @@ include('$content/user/om-digistar-lib/dsproxy.js');
 let nav = new DsObject('navigation');
 let scene = new DsObject('scene');
 let system = new DsObject('system');
-let timeData = new DsObject('timeDilationData', 'TimeData');
+let timeData = new DsObject('timeDilationData');
 let eye = new DsObject('eye');
 let lastTime = scene.date * 86400; // system.time;
 let currentTime;
@@ -167,7 +167,7 @@ while (true) {
 			timeRate.text = overrideTimeRate.text;
 		}
 		
-		timeData.earthTime = formatTime(timeData.tEarth); // + addTime.position.x
+		timeData.earthTime = formatTime(timeData.tEarth + timeData.tEarthOffset); // + addTime.position.x
 	}
 	
 	if (!timeData.shipPaused) {
@@ -175,17 +175,18 @@ while (true) {
 		timeData.shipTime = formatTime(timeData.tShip);
 	}
 	
-	if (timeData.earthTimeLabel.name) {
-		DsObject.get(timeData.earthTimeLabel.name).text = timeData.earthTime;
+	// Populate text objects
+	if (timeData.earthTimeText.name) {
+		DsObject.get(timeData.earthTimeText.name).text = timeData.earthTime;
 	}
-	if (timeData.shipTimeLabel.name) {
-		DsObject.get(timeData.shipTimeLabel.name).text = timeData.shipTime;
+	if (timeData.shipTimeText.name) {
+		DsObject.get(timeData.shipTimeText.name).text = timeData.shipTime;
 	}
-	if (timeData.earthTimeLabel.name) {
-		DsObject.get(timeData.earthTimeLabel.name).text = timeData.timeRate;
+	if (timeData.earthTimeText.name) {
+		DsObject.get(timeData.earthTimeText.name).text = timeData.timeRate;
 	}
-	if (timeData.cPercentLabel.name) {
-		DsObject.get(timeData.cPercentLabel.name).text = timeData.cPercent;
+	if (timeData.cPercentText.name) {
+		DsObject.get(timeData.cPercentText.name).text = timeData.cPercent;
 	}
 	
 	Ds.Wait(0.1);

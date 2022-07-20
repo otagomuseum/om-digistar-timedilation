@@ -21,10 +21,10 @@ TimeData attribute rGravity double
 TimeData attribute earthPaused bool
 TimeData attribute shipPaused bool
 
-TimeData attribute earthTimeLabel name
-TimeData attribute shipTimeLabel name
-TimeData attribute timeRateLabel name
-TimeData attribute cPercentLabel name 
+TimeData attribute earthTimeText name
+TimeData attribute shipTimeText name
+TimeData attribute timeRateText name
+TimeData attribute cPercentText name 
 
 TimeData lock
 
