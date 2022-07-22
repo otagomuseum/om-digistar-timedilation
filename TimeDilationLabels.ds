@@ -8,8 +8,6 @@
 	script play .\TimeDilationConsole_setup.ds
 	script play .\TimeData.ds
 	
-
-	
 	shipTime is textClass
 	scene date rate 1 seconds
 
