@@ -4,7 +4,7 @@ This script creates a new Digistar class TimeData and a Javascript which monitor
 
 ## Installation
 
-The Digistar Javascript Proxy library is also required. Unzip both into $content/user/lib
+The [Digistar Javascript Proxy library](https://github.com/otagomuseum/om-digistar-lib) is also required. Unzip both into $content/user/lib
 
 ## Usage
 
