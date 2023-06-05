@@ -182,8 +182,8 @@ while (true) {
 	if (timeData.shipTimeText.name) {
 		DsObject.get(timeData.shipTimeText.name).text = timeData.shipTime;
 	}
-	if (timeData.earthTimeText.name) {
-		DsObject.get(timeData.earthTimeText.name).text = timeData.timeRate;
+	if (timeData.timeRateText.name) {
+		DsObject.get(timeData.timeRateText.name).text = timeData.timeRate;
 	}
 	if (timeData.cPercentText.name) {
 		DsObject.get(timeData.cPercentText.name).text = timeData.cPercent;
