@@ -164,7 +164,7 @@ while (true) {
 		if (timeData.overrideTimeRate == "") {
 			timeData.timeRate = formatTimeRate(totalRate);
 		} else {
-			timeRate.text = overrideTimeRate.text;
+			timeData.timeRate = timeData.overrideTimeRate;
 		}
 		
 		timeData.earthTime = formatTime(timeData.tEarth + timeData.tEarthOffset); // + addTime.position.x
